@@ -4,9 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
+ * Default implementation of {@link com.solidbeans.core.async.ResponseEntityMapper}
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public class DefaultResponseEntityMapper<O> implements ResponseEntityMapper<O> {
+
     @Override
     public ResponseEntity<O> mapSuccess(O output) {
         return new ResponseEntity<>(output, HttpStatus.OK);

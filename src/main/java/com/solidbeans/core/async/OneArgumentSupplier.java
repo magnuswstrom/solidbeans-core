@@ -5,14 +5,19 @@
  */
 package com.solidbeans.core.async;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
+ * Supplier with one argument
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public interface ArgumentSupplier<I, O> {
-    
-    CompletableFuture<O> get(I input);
+public interface OneArgumentSupplier<I, O> {
+
+    /**
+     * Supplies output result with one argument in
+     *
+     * @param input Input argument
+     * @return Output result
+     */
+    O get(I input);
     
 }

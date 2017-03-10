@@ -11,6 +11,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * Async executor runs runnable and callable in it's own thread pool
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class AsyncExecutor {
