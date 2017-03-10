@@ -1,5 +1,7 @@
 package com.solidbeans.core.async;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Supplier with two arguments
  *
@@ -12,8 +14,8 @@ public interface TwoArgumentsSupplier<I1, I2, O> {
      *
      * @param input1 Input argument 1
      * @param input2 Input argument 2
-     * @return Output result
+     * @return Completable future reference
      */
-    O get(I1 input1, I2 input2);
+    CompletableFuture<O> get(I1 input1, I2 input2);
 
 }

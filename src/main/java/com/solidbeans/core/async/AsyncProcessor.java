@@ -125,7 +125,7 @@ public final class AsyncProcessor {
     public static <I, O> CompletableFuture<O> supplyAsync(OneArgumentSupplier<I, O> supplier, I input, Executor executor) {
         checkNotNull(supplier, "Supplier is null");
 
-        return supplyAsync(() -> null, executor).thenApply((ignore) -> supplier.get(input));
+        return supplyAsync(() -> null, executor).thenCompose((ignore) -> supplier.get(input));
     }
 
     /**
@@ -165,6 +165,6 @@ public final class AsyncProcessor {
     public static <I1, I2, O> CompletableFuture<O> supplyAsync(TwoArgumentsSupplier<I1, I2, O> supplier, I1 input1, I2 input2, Executor executor) {
         checkNotNull(supplier, "Supplier is null");
 
-        return supplyAsync(() -> null, executor).thenApply((ignore) -> supplier.get(input1, input2));
+        return supplyAsync(() -> null, executor).thenCompose((ignore) -> supplier.get(input1, input2));
     }
 }
