@@ -34,4 +34,24 @@ public final class ResponseEntitySupplier {
                     .exceptionally(mapper::mapFailure)
         );
     }
+
+    public static <I1, I2, O> CompletableFuture<ResponseEntity<O>> supply(TwoArgumentsSupplier<I1, I2, O> supplier, I1 input1, I2 input2, ResponseEntityMapper<O> mapper) {
+        return supply(AsyncProcessor.supplyAsync(), supplier, input1, input2, mapper);
+    }
+
+    public static <I1, I2, O> CompletableFuture<ResponseEntity<O>> supply(TwoArgumentsSupplier<I1, I2, O> supplier, I1 input1, I2 input2, ResponseEntityMapper<O> mapper, String threadPoolName) {
+        return supply(AsyncProcessor.supplyAsync(threadPoolName), supplier, input1, input2, mapper);
+    }
+
+    public static <I1, I2, O> CompletableFuture<ResponseEntity<O>> supply(TwoArgumentsSupplier<I1, I2, O> supplier, I1 input1, I2 input2, ResponseEntityMapper<O> mapper, Executor executor) {
+        return supply(AsyncProcessor.supplyAsync(executor), supplier, input1, input2, mapper);
+    }
+
+    private static <I1, I2, O> CompletableFuture<ResponseEntity<O>> supply(CompletableFuture<O> completableFuture, TwoArgumentsSupplier<I1, I2, O> supplier, I1 input1, I2 input2, ResponseEntityMapper<O> mapper) {
+        return completableFuture.thenCompose((ignore) ->
+                supplier.get(input1, input2)
+                        .thenApply(mapper::mapSuccess)
+                        .exceptionally(mapper::mapFailure)
+        );
+    }
 }

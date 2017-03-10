@@ -74,8 +74,8 @@ public class AsyncRestClient {
     private <T> CompletableFuture<T> execute(ListenableFuture<ResponseEntity<T>> responseListener) {
         CompletableFuture<T> completableFuture = new CompletableFuture<>();        
         
-        responseListener.addCallback((successResult) -> completableFuture.complete(successResult.getBody()), 
-                (failureException) -> completableFuture.completeExceptionally(failureException));        
+        responseListener.addCallback((successResult) -> completableFuture.complete(successResult.getBody()),
+                completableFuture::completeExceptionally);
         
         return completableFuture;
     }
