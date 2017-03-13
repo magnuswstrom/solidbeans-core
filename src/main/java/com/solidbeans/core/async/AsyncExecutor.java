@@ -24,15 +24,52 @@ public final class AsyncExecutor {
     /**
      * Creates async executor which will hold a underlying thread pool to execute it's tasks
      *
+     * @param name Base name for all threads in executor thread pool
      * @param poolSize Underlying thread pool size, it will be a fixed thread pool
      * @param threadPriority Thread priority that tasks will be executed in
      */
-    public AsyncExecutor(int poolSize, int threadPriority) {
+    public AsyncExecutor(String name, int poolSize, int threadPriority) {
+        checkArgument(name != null && !name.isEmpty(), "Name is null or empty");
         checkArgument(poolSize > 0, "Invalid pool size");
         checkArgument(threadPriority >= Thread.MIN_PRIORITY, "Invalid thread priority");
         checkArgument(threadPriority <= Thread.MAX_PRIORITY, "Invalid thread priority");
 
-        this.executorSerive = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(poolSize, new AsyncThreadFactory(threadPriority)));
+        this.executorSerive = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(poolSize, new AsyncThreadFactory(name, threadPriority)));
+    }
+
+    /**
+     * See {@link ExecutorService#shutdown()}
+     */
+    public void shutdown() {
+        executorSerive.shutdown();
+    }
+
+    /**
+     * See {@link ExecutorService#shutdownNow()}
+     */
+    public void shutdownNow() {
+        executorSerive.shutdownNow();
+    }
+
+    /**
+     * See {@link ExecutorService#awaitTermination(long, TimeUnit)}
+     */
+    public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        executorSerive.awaitTermination(timeout, unit);
+    }
+
+    /**
+     * See {@link ExecutorService#isShutdown()}
+     */
+    public boolean isShutdown() {
+        return executorSerive.isShutdown();
+    }
+
+    /**
+     * See {@link ExecutorService#isTerminated()}
+     */
+    public boolean isTerminated() {
+        return executorSerive.isTerminated();
     }
 
     /**
@@ -124,17 +161,19 @@ public final class AsyncExecutor {
      */
     private class AsyncThreadFactory implements ThreadFactory {
 
+        private final String name;
         private final int threadPriority;
         private int threadCount;
 
-        private AsyncThreadFactory(int threadPriority) {
+        private AsyncThreadFactory(String name, int threadPriority) {
+            this.name = name;
             this.threadPriority = threadPriority;
             this.threadCount = 0;
         }
 
         @Override
         public Thread newThread(Runnable runnable) {
-            String threadName = AsyncExecutor.class.getSimpleName() + "Thread-" + (++threadCount);
+            String threadName = name + "-" + AsyncExecutor.class.getSimpleName() + "-" + (++threadCount);
 
             log.info(Thread.currentThread().getName() + " creates service thread " + threadName + " with priority " + threadPriority);
 

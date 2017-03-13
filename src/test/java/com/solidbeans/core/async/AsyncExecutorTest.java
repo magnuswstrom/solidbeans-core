@@ -4,6 +4,8 @@ import com.google.common.util.concurrent.FutureCallback;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -12,30 +14,38 @@ import static org.hamcrest.core.Is.is;
 public class AsyncExecutorTest {
 
     @Test
-    public void testAsyncSender() {
-        AsyncExecutor sender = new AsyncExecutor(3, 4);
+    public void testAsyncExecutor() {
+        AsyncExecutor executor = new AsyncExecutor("Test", 3, 4);
         AsyncCallbackCounter counter = new AsyncCallbackCounter();
         AsyncCallback callback = new AsyncCallback(counter);
 
-        sender.submit(this::call, callback);
-        sender.submit(this::call, callback);
-        sender.submit(this::call, callback);
-        sender.submit(this::call, callback);
-        sender.submit(this::call, callback);
-        sender.submit(this::call, callback);
+        executor.submit(this::call, callback);
+        executor.submit(this::call, callback);
+        executor.submit(this::call, callback);
+        executor.submit(this::call, callback);
+        executor.submit(this::call, callback);
+        executor.submit(this::call, callback);
 
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
-        sender.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
+        executor.execute(counter::increment);
 
         suspend(1000);
 
         Assert.assertThat(counter.count(), is(14));
+
+        executor.shutdown();
+
+        try {
+            executor.awaitTermination(3000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String call() {
