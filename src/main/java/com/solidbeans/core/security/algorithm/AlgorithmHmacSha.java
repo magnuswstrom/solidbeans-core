@@ -54,11 +54,11 @@ public final class AlgorithmHmacSha {
     public static String randomSecret(Algorithm algorithm) {
         switch(algorithm) {
             case HS256:
-                return UUIDGenerator.uuid(false);
+                return UUIDGenerator.uuid(true);
             case HS384:
-                return UUIDGenerator.uuid(false) + UUIDGenerator.uuid(false).substring(0, 16);
+                return UUIDGenerator.uuid(true) + UUIDGenerator.uuid(true).substring(0, 16);
             case HS512:
-                return UUIDGenerator.uuid(false) + UUIDGenerator.uuid(false);
+                return UUIDGenerator.uuid(true) + UUIDGenerator.uuid(true);
             default:
                 return null;
         }

@@ -9,8 +9,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class JwtHeader {
 
-    private String typ;
-    private String alg;
+    private final String typ;
+    private final String alg;
 
     private JwtHeader(String typ, String alg) {
         this.typ = typ;

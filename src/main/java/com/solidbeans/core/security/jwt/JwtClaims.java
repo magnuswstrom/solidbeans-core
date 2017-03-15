@@ -5,14 +5,14 @@ package com.solidbeans.core.security.jwt;
  */
 public final class JwtClaims<T> {
 
-    private String iss;
-    private String sub;
-    private String aud;
-    private Long exp;
-    private Long nbf;
-    private Long iat;
-    private String jti;
-    private T own;
+    private final String iss;
+    private final String sub;
+    private final String aud;
+    private final Long exp;
+    private final Long nbf;
+    private final Long iat;
+    private final String jti;
+    private final T own;
 
     private JwtClaims(String iss, String sub, String aud, Long exp, Long nbf, Long iat, String jti, T own) {
         this.iss = iss;

@@ -57,7 +57,7 @@ public final class JwtSigner {
         return new JwtSigner(algorithm, privateKey);
     }
 
-    public <T> String sign(JwtClaims<T> claims) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public <T> String sign(JwtClaims<T> claims) throws InvalidKeyException, SignatureException {
         JwtParts parts = JwtParts.fromAlg(algorithm, claims);
         byte[] signature = null;
 

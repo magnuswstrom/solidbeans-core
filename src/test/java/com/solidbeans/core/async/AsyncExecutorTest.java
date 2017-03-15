@@ -54,7 +54,7 @@ public class AsyncExecutorTest {
 
     private void suspend(long milliseconds) {
         try {
-            Thread.currentThread().sleep(milliseconds);
+            Thread.sleep(milliseconds);
         }
         catch (InterruptedException e) {
             e.printStackTrace();

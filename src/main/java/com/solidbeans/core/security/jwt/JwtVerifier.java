@@ -54,7 +54,7 @@ public final class JwtVerifier {
         return new JwtVerifier(algorithm, publicKey);
     }
 
-    public <T> boolean verify(String jwt) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
+    public <T> boolean verify(String jwt) throws InvalidKeyException, SignatureException {
         JwtParts parts = JwtParts.fromJwt(jwt);
 
         if(algorithmHmacSha != null) {

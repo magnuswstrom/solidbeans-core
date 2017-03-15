@@ -26,7 +26,7 @@ public final class JwtConfig {
     private boolean isIatNotNull;
     private boolean isNbfNotNull;
     private boolean isJtiNotNull;
-    private List<String> validIssuers;
+    private final List<String> validIssuers;
 
     public JwtConfig() {
         this.isIssNotNull = false;

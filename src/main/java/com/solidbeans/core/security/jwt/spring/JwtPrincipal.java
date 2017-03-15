@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 final class JwtPrincipal {
 
-    private String jwt;
-    private HttpServletRequest httpRequest;
+    private final String jwt;
+    private final HttpServletRequest httpRequest;
 
     public JwtPrincipal(String jwt, HttpServletRequest httpRequest) {
         this.jwt = jwt;

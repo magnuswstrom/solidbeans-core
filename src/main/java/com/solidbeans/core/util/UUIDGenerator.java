@@ -11,10 +11,14 @@ public final class UUIDGenerator {
     private UUIDGenerator() {
     }
 
-    public static String uuid(boolean delimiter) {
+    public static String uuid() {
+        return uuid(false);
+    }
+
+    public static String uuid(boolean removeDelimiter) {
         String uuid = UUID.randomUUID().toString();
 
-        if(delimiter) {
+        if(removeDelimiter) {
             return uuid.replaceAll("-", "");
         }
 

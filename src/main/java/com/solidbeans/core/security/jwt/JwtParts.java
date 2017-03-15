@@ -15,9 +15,9 @@ import static com.solidbeans.core.util.Json.toJson;
  */
 public final class JwtParts {
 
-    private String header;
-    private String claims;
-    private String signature;
+    private final String header;
+    private final String claims;
+    private final String signature;
 
     private JwtParts(String header, String claims, String signature) {
         this.header = header;

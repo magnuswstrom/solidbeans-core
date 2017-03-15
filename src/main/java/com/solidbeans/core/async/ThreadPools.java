@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class ThreadPools {
 
-    private static Map<String, ExecutorService> threadPools;
+    private static final Map<String, ExecutorService> threadPools;
 
     static {
         threadPools = new HashMap<>();
