@@ -18,11 +18,26 @@ public final class Json {
     
     private Json() {
     }
-    
+
+    /**
+     * Transform object to JSON using underlying implementation.
+     *
+     * @param data Object to transform into JSON
+     * @param <T> Type of object to transform
+     * @return JSON string
+     */
     public static <T> String toJson(T data) {
         return gson.toJson(data);
     }
 
+    /**
+     * Transform JSON to object using underlying implementation.
+     *
+     * @param json JSON string
+     * @param classOfT Class definition of object to create
+     * @param <T> Type of object to create
+     * @return Transformed object from JSON
+     */
     public static <T> T fromJson(String json, Class<T> classOfT) {
         return gson.fromJson(json, classOfT);
     }

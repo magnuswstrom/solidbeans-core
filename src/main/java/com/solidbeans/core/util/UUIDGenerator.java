@@ -11,10 +11,21 @@ public final class UUIDGenerator {
     private UUIDGenerator() {
     }
 
+    /**
+     * Generates UUID with delimiter
+     *
+     * @return UUID with delimiter
+     */
     public static String uuid() {
         return uuid(false);
     }
 
+    /**
+     * Generates UUID
+     *
+     * @param removeDelimiter Tells to exclude delimiter
+     * @return UUID
+     */
     public static String uuid(boolean removeDelimiter) {
         String uuid = UUID.randomUUID().toString();
 
