@@ -11,13 +11,13 @@ import org.springframework.security.core.AuthenticationException;
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtException extends AuthenticationException {
+public final class SecurityJwtException extends AuthenticationException {
 
-    public JwtException(String message) {
+    public SecurityJwtException(String message) {
         super(message);
     }
 
-    public JwtException(String message, Throwable cause) {
+    public SecurityJwtException(String message, Throwable cause) {
         super(message, cause);
     }
 

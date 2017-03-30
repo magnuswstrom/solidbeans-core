@@ -7,13 +7,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtConfig {
+public final class ClaimsConfig {
 
-    public enum JwtJtiType {
+    public enum JtiType {
         NONE, IP, UUID
     }
 
-    private JwtJtiType jtiType;
+    private JtiType jtiType;
     private long cacheMaxSize;
     private int cacheTime;
     private TimeUnit cacheTimeUnit;
@@ -28,7 +28,7 @@ public final class JwtConfig {
     private boolean isJtiNotNull;
     private final List<String> validIssuers;
 
-    public JwtConfig() {
+    public ClaimsConfig() {
         this.isIssNotNull = false;
         this.isIssRequiredValid = false;
         this.isSubNotNull = false;
@@ -38,7 +38,7 @@ public final class JwtConfig {
         this.isNbfNotNull = false;
         this.isJtiNotNull = false;
         this.validIssuers = new ArrayList<>();
-        this.jtiType = JwtJtiType.NONE;
+        this.jtiType = JtiType.NONE;
         this.cacheMaxSize = 1000000L;
         this.cacheTime = 1;
         this.cacheTimeUnit = TimeUnit.HOURS;
@@ -112,11 +112,11 @@ public final class JwtConfig {
         return validIssuers;
     }
 
-    public JwtJtiType getJtiType() {
+    public JtiType getJtiType() {
         return jtiType;
     }
 
-    public void setJtiType(JwtJtiType jtiType) {
+    public void setJtiType(JtiType jtiType) {
         this.jtiType = jtiType;
     }
 

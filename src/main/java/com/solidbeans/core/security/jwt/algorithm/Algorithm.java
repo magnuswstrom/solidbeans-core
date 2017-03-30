@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.solidbeans.core.security.algorithm;
+package com.solidbeans.core.security.jwt.algorithm;
 
 import javax.crypto.Mac;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.security.Signature;
 
 /**
+ * Defines supported JWT algorithms
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
@@ -27,21 +28,44 @@ public enum Algorithm {
         this.implementationAlg = implementationAlg;
     }
 
-    public String getAlg() {
+    /**
+     * Gets the public JWT algorithm name, like HS256 i.e
+     *
+     * @return Public JWT algorithm name
+     */
+    public String alg() {
         return name();
     }
 
-    public Mac getMac() throws NoSuchAlgorithmException {
+    /**
+     * Gets a message authentication code instance suited for this algorithm
+     *
+     * @return Message authentication code instance
+     * @throws GeneralSecurityException If instantiating fails
+     */
+    Mac mac() throws GeneralSecurityException {
         return Mac.getInstance(implementationAlg);
     }
 
-    public Signature getSignature() throws NoSuchAlgorithmException {
+    /**
+     * Gets a digital signature algorithm instance suited for this algorithm
+     *
+     * @return Digital signature algorithm instance
+     * @throws GeneralSecurityException If instantiating fails
+     */
+    Signature signature() throws GeneralSecurityException {
         return Signature.getInstance(implementationAlg);
     }
 
+    /**
+     * Gets algorithm from public JWT algorithm string
+     *
+     * @param alg Public JWT algorithm string
+     * @return Matching algorithm
+     */
     public static Algorithm fromAlg(String alg) {
         for(Algorithm algorithm : values()) {
-            if(algorithm.getAlg().equals(alg)) {
+            if(algorithm.alg().equals(alg)) {
                 return algorithm;
             }
         }

@@ -1,7 +1,7 @@
 package com.solidbeans.core.async;
 
 import com.google.common.collect.Maps;
-import com.solidbeans.core.util.UUIDGenerator;
+import com.solidbeans.core.util.SolidUtil;
 
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class AsyncContext {
         checkNotNull(context, "Context is null");
 
         this.context = context;
-        this.context.put(AsyncProperties.AsyncId, UUIDGenerator.uuid());
+        this.context.put(AsyncProperties.AsyncId, SolidUtil.Uuid.uuid());
     }
 
     /**

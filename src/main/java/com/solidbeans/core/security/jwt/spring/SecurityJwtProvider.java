@@ -1,9 +1,10 @@
 package com.solidbeans.core.security.jwt.spring;
 
-import com.solidbeans.core.security.algorithm.Algorithm;
-import com.solidbeans.core.security.jwt.JwtClaims;
-import com.solidbeans.core.security.jwt.JwtParts;
-import com.solidbeans.core.security.jwt.JwtVerifier;
+import com.solidbeans.core.security.jwt.Parts;
+import com.solidbeans.core.security.jwt.Verifier;
+import com.solidbeans.core.security.jwt.algorithm.Algorithm;
+import com.solidbeans.core.security.jwt.claims.Claims;
+import com.solidbeans.core.util.SolidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,9 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,22 +24,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtSecurityProvider<T> implements AuthenticationProvider {
+public final class SecurityJwtProvider<T> implements AuthenticationProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtSecurityProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(SecurityJwtProvider.class);
 
-    private final JwtSecurityFilterRepository<T> repository;
-    private final JwtConfig config;
-    private final JwtJtiCache jtiCache;
-    private final Class<JwtClaims<T>> claimsClass;
+    private final SecurityJwtRepository<T> repository;
+    private final ClaimsConfig config;
+    private final JtiCache jtiCache;
+    private final Class<Claims<T>> claimsClass;
 
-    public JwtSecurityProvider(JwtSecurityFilterRepository<T> repository, JwtConfig config, Class<JwtClaims<T>> claimsClass) {
+    public SecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
         checkNotNull(repository);
         checkNotNull(config);
+        checkNotNull(claimsClass);
 
         this.repository = repository;
         this.config = config;
-        this.jtiCache = new JwtJtiCache(config);
+        this.jtiCache = new JtiCache(config);
         this.claimsClass = claimsClass;
     }
 
@@ -49,12 +49,12 @@ public final class JwtSecurityProvider<T> implements AuthenticationProvider {
         try {
             checkNotNull(authentication);
             checkNotNull(authentication.getPrincipal());
-            checkArgument(authentication.getPrincipal() instanceof JwtPrincipal);
+            checkArgument(authentication.getPrincipal() instanceof Principal);
             checkNotNull(authentication);
 
-            JwtPrincipal principal = (JwtPrincipal)authentication.getPrincipal();
-            JwtParts parts = JwtParts.fromJwt(principal.getJwt());
-            JwtClaims<T> claims = parts.getJwtClaims(claimsClass);
+            Principal principal = (Principal)authentication.getPrincipal();
+            Parts parts = Parts.fromJwt(principal.getJwt());
+            Claims<T> claims = parts.getJwtClaims(claimsClass);
             Algorithm algorithm = parts.getAlgorithm();
 
             authorizeAlgorithm(algorithm);
@@ -71,7 +71,7 @@ public final class JwtSecurityProvider<T> implements AuthenticationProvider {
             return new PreAuthenticatedAuthenticationToken(claims, null, authorities);
         }
         catch(Throwable e) {
-            throw new JwtException("JWT authentication failed", e);
+            throw new SecurityJwtException("JWT authentication failed", e);
         }
     }
 
@@ -85,7 +85,7 @@ public final class JwtSecurityProvider<T> implements AuthenticationProvider {
         );
     }
 
-    private void authorizeClaims(JwtClaims<T> claims, JwtPrincipal principal) {
+    private void authorizeClaims(Claims<T> claims, Principal principal) {
         checkNotNull(claims);
 
         if(config.isIssNotNull()) {
@@ -132,11 +132,11 @@ public final class JwtSecurityProvider<T> implements AuthenticationProvider {
 
             switch (config.getJtiType()) {
                 case IP:
-                    checkArgument(isIP(claims.getJti()), "JTI not valid IP format");
+                    checkArgument(SolidUtil.Nio.isValidIp(claims.getJti()), "JTI not valid IP format");
                     checkArgument(Objects.equals(principal.getHttpRequest().getRemoteAddr(), claims.getJti()), "JTI not valid IP");
                     break;
                 case UUID:
-                    checkArgument(isUUID(claims.getJti()), "JTI not valid UUID format");
+                    checkArgument(SolidUtil.Uuid.isUuid(claims.getJti()), "JTI not valid Uuid format");
                     checkArgument(!jtiCache.exists(claims.getJti()), "JTI already executed");
                     jtiCache.put(claims.getJti());
                     break;
@@ -146,34 +146,9 @@ public final class JwtSecurityProvider<T> implements AuthenticationProvider {
         }
     }
 
-    private void authorizeSignature(Algorithm algorithm, JwtClaims<T> claims, JwtPrincipal principal) throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
-        JwtVerifier verifier;
-
-        switch(algorithm) {
-            case HS256:
-            case HS384:
-            case HS512:
-                verifier = JwtVerifier.fromAlg(algorithm, repository.algorithmHmacShaSecret(claims, principal.getHttpRequest()));
-                checkArgument(verifier.verify(principal.getJwt()), "Invalid signature");
-                break;
-            case RS256:
-            case RS384:
-            case RS512:
-                verifier = JwtVerifier.fromAlg(algorithm, repository.algorithmRsaShaPublicKey(claims, principal.getHttpRequest()));
-                checkArgument(verifier.verify(principal.getJwt()), "Invalid signature");
-                break;
-            default:
-                throw new JwtException("Unsupported JWT algorithm " + algorithm);
-        }
-    }
-
-    private boolean isIP(String ip) {
-        return ip.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}") ||
-                ip.matches("[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}:[0-9A-Za-z]{1,4}");
-    }
-
-    private boolean isUUID(String uuid) {
-        return uuid.matches("[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{4}-[0-9A-Za-z]{12}");
+    private void authorizeSignature(Algorithm algorithm, Claims<T> claims, Principal principal) throws GeneralSecurityException {
+        Verifier verifier = Verifier.fromAlg(algorithm);
+        checkArgument(verifier.verify(principal.getJwt(), repository.algorithmSecret(algorithm, claims, principal.getHttpRequest())), "Invalid signature");
     }
 
     @Override

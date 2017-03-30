@@ -14,9 +14,9 @@ import com.google.gson.Gson;
  */
 public final class Json {
     
-    private static final Gson gson = new Gson();
+    private final Gson gson = new Gson();
     
-    private Json() {
+    Json() {
     }
 
     /**
@@ -26,7 +26,7 @@ public final class Json {
      * @param <T> Type of object to transform
      * @return JSON string
      */
-    public static <T> String toJson(T data) {
+    public <T> String toJson(T data) {
         return gson.toJson(data);
     }
 
@@ -38,7 +38,7 @@ public final class Json {
      * @param <T> Type of object to create
      * @return Transformed object from JSON
      */
-    public static <T> T fromJson(String json, Class<T> classOfT) {
+    public <T> T fromJson(String json, Class<T> classOfT) {
         return gson.fromJson(json, classOfT);
     }
 }

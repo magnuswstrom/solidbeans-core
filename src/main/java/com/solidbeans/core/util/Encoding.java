@@ -12,9 +12,9 @@ import java.nio.charset.StandardCharsets;
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class Encodings {
+public final class Encoding {
     
-    private Encodings() {
+    Encoding() {
     }
 
     /**
@@ -23,7 +23,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with US ASCII charset
      */
-    public static byte[] usascii(String data) {
+    public byte[] usascii(String data) {
         return data.getBytes(StandardCharsets.US_ASCII);
     }
 
@@ -33,7 +33,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with US ASCII charset
      */
-    public static String usascii(byte[] data) {
+    public String usascii(byte[] data) {
         return new String(data, StandardCharsets.US_ASCII);
     }
 
@@ -43,7 +43,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with ISO-8859-1 charset
      */
-    public static byte[] iso88591(String data) {
+    public byte[] iso88591(String data) {
         return data.getBytes(StandardCharsets.ISO_8859_1);
     }
 
@@ -53,7 +53,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with ISO-8859-1 charset
      */
-    public static String iso88591(byte[] data) {
+    public String iso88591(byte[] data) {
         return new String(data, StandardCharsets.ISO_8859_1);
     }
 
@@ -63,7 +63,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with UTF-8 charset
      */
-    public static byte[] utf8(String data) {
+    public byte[] utf8(String data) {
         return data.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -73,7 +73,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with UTF-8 charset
      */
-    public static String utf8(byte[] data) {
+    public String utf8(byte[] data) {
         return new String(data, StandardCharsets.UTF_8);
     }
 
@@ -83,7 +83,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with UTF-16 charset
      */
-    public static byte[] utf16(String data) {
+    public byte[] utf16(String data) {
         return data.getBytes(StandardCharsets.UTF_16);
     }
 
@@ -93,7 +93,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with UTF-16 charset
      */
-    public static String utf16(byte[] data) {
+    public String utf16(byte[] data) {
         return new String(data, StandardCharsets.UTF_16);
     }
 
@@ -103,7 +103,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with UTF-16BE charset
      */
-    public static byte[] utf16be(String data) {
+    public byte[] utf16be(String data) {
         return data.getBytes(StandardCharsets.UTF_16BE);
     }
 
@@ -113,7 +113,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with UTF-16BE charset
      */
-    public static String utf16be(byte[] data) {
+    public String utf16be(byte[] data) {
         return new String(data, StandardCharsets.UTF_16BE);
     }
 
@@ -123,7 +123,7 @@ public final class Encodings {
      * @param data String to get bytes for
      * @return Bytes with UTF-16LE charset
      */
-    public static byte[] utf16le(String data) {
+    public byte[] utf16le(String data) {
         return data.getBytes(StandardCharsets.UTF_16LE);
     }
 
@@ -133,8 +133,7 @@ public final class Encodings {
      * @param data Bytes to create string for
      * @return String with UTF-16LE charset
      */
-    public static String utf16le(byte[] data) {
+    public String utf16le(byte[] data) {
         return new String(data, StandardCharsets.UTF_16LE);
     }
-
 }

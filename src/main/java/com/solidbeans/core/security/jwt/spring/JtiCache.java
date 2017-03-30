@@ -14,11 +14,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtJtiCache {
+public final class JtiCache {
 
     private final Cache<String, String> cache;
 
-    public JwtJtiCache(JwtConfig config) {
+    public JtiCache(ClaimsConfig config) {
         checkNotNull(config);
 
         this.cache = CacheBuilder.newBuilder()

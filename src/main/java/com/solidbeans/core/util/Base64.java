@@ -5,16 +5,13 @@
  */
 package com.solidbeans.core.util;
 
-import static com.solidbeans.core.util.Encodings.utf8;
-import java.util.Base64;
-
 /**
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class B64 {
+public final class Base64 {
         
-    private B64() {
+    Base64() {
     }
 
     /**
@@ -23,8 +20,8 @@ public final class B64 {
      * @param data Data to base64 encode
      * @return Base64 encoded data
      */
-    public static String encodeToString(String data) {
-        return utf8(encode(data));
+    public String encodeToString(String data) {
+        return SolidUtil.Encoding.utf8(encode(data));
     }
 
     /**
@@ -33,8 +30,8 @@ public final class B64 {
      * @param data Data to base64 encode
      * @return Base64 encoded data
      */
-    public static String encodeToString(byte[] data) {
-        return utf8(encode(data));
+    public String encodeToString(byte[] data) {
+        return SolidUtil.Encoding.utf8(encode(data));
     }
 
     /**
@@ -43,8 +40,8 @@ public final class B64 {
      * @param data Data to base64 encode
      * @return Base64 encoded data
      */
-    public static byte[] encode(String data) {
-        return encode(utf8(data));
+    public byte[] encode(String data) {
+        return encode(SolidUtil.Encoding.utf8(data));
     }
 
     /**
@@ -53,8 +50,8 @@ public final class B64 {
      * @param data Data to base64 encode
      * @return Base64 encoded data
      */
-    public static byte[] encode(byte[] data) {
-        return Base64.getEncoder().encode(data);
+    public byte[] encode(byte[] data) {
+        return java.util.Base64.getEncoder().encode(data);
     }
 
     /**
@@ -63,7 +60,7 @@ public final class B64 {
      * @param data Data to base64 decode
      * @return Base64 decoded data
      */
-    public static String decodeToString(String data) { return utf8(decode(data)); }
+    public String decodeToString(String data) { return SolidUtil.Encoding.utf8(decode(data)); }
 
     /**
      * Base64 decodes data using UTF-8 when transforming from string to bytes and vice versa.
@@ -71,7 +68,7 @@ public final class B64 {
      * @param data Data to base64 decode
      * @return Base64 decoded data
      */
-    public static String decodeToString(byte[] data) { return utf8(decode(data)); }
+    public String decodeToString(byte[] data) { return SolidUtil.Encoding.utf8(decode(data)); }
 
     /**
      * Base64 decodes data using UTF-8 when transforming from string to bytes and vice versa.
@@ -79,8 +76,8 @@ public final class B64 {
      * @param data Data to base64 decode
      * @return Base64 decoded data
      */
-    public static byte[] decode(String data) {
-        return decode(utf8(data));
+    public byte[] decode(String data) {
+        return decode(SolidUtil.Encoding.utf8(data));
     }
 
     /**
@@ -89,8 +86,8 @@ public final class B64 {
      * @param data Data to base64 decode
      * @return Base64 decoded data
      */
-    public static byte[] decode(byte[] data) {
-        return Base64.getDecoder().decode(data);
+    public byte[] decode(byte[] data) {
+        return java.util.Base64.getDecoder().decode(data);
     }
 
     /**
@@ -100,7 +97,7 @@ public final class B64 {
      * @param data Data to base64 URL encode
      * @return Base64 URL encoded data
      */
-    public static String urlEncodeToString(String data) {
+    public String urlEncodeToString(String data) {
         return urlEncodeToString(data, false);
     }
 
@@ -111,8 +108,8 @@ public final class B64 {
      * @param withoutPadding tells to not add any padding character at the end of the encoded byte data
      * @return Base64 URL encoded data
      */
-    public static String urlEncodeToString(String data, boolean withoutPadding) {
-        return utf8(urlEncode(data, withoutPadding));
+    public String urlEncodeToString(String data, boolean withoutPadding) {
+        return SolidUtil.Encoding.utf8(urlEncode(data, withoutPadding));
     }
 
     /**
@@ -122,7 +119,7 @@ public final class B64 {
      * @param data Data to base64 URL encode
      * @return Base64 URL encoded data
      */
-    public static String urlEncodeToString(byte[] data) {
+    public String urlEncodeToString(byte[] data) {
         return urlEncodeToString(data, false);
     }
 
@@ -133,8 +130,8 @@ public final class B64 {
      * @param withoutPadding tells to not add any padding character at the end of the encoded byte data
      * @return Base64 URL encoded data
      */
-    public static String urlEncodeToString(byte[] data, boolean withoutPadding) {
-        return utf8(urlEncode(data, withoutPadding));
+    public String urlEncodeToString(byte[] data, boolean withoutPadding) {
+        return SolidUtil.Encoding.utf8(urlEncode(data, withoutPadding));
     }
 
     /**
@@ -144,7 +141,7 @@ public final class B64 {
      * @param data Data to base64 URL encode
      * @return Base64 URL encoded data
      */
-    public static byte[] urlEncode(String data) {
+    public byte[] urlEncode(String data) {
         return urlEncode(data, false);
     }
 
@@ -155,8 +152,8 @@ public final class B64 {
      * @param withoutPadding tells to not add any padding character at the end of the encoded byte data
      * @return Base64 URL encoded data
      */
-    public static byte[] urlEncode(String data, boolean withoutPadding) {
-        return urlEncode(utf8(data), withoutPadding);
+    public byte[] urlEncode(String data, boolean withoutPadding) {
+        return urlEncode(SolidUtil.Encoding.utf8(data), withoutPadding);
     }
 
     /**
@@ -166,7 +163,7 @@ public final class B64 {
      * @param data Data to base64 URL encode
      * @return Base64 URL encoded data
      */
-    public static byte[] urlEncode(byte[] data) {
+    public byte[] urlEncode(byte[] data) {
         return urlEncode(data, false);
     }
 
@@ -177,8 +174,8 @@ public final class B64 {
      * @param withoutPadding tells to not add any padding character at the end of the encoded byte data
      * @return Base64 URL encoded data
      */
-    public static byte[] urlEncode(byte[] data, boolean withoutPadding) {
-        Base64.Encoder encoder = Base64.getUrlEncoder();
+    public byte[] urlEncode(byte[] data, boolean withoutPadding) {
+        java.util.Base64.Encoder encoder = java.util.Base64.getUrlEncoder();
         
         if(withoutPadding) {
             encoder = encoder.withoutPadding();
@@ -193,8 +190,8 @@ public final class B64 {
      * @param data Data to base64 URL decode
      * @return Base64 URL decoded data
      */
-    public static String urlDecodeToString(String data) {
-        return utf8(urlDecode(data));
+    public String urlDecodeToString(String data) {
+        return SolidUtil.Encoding.utf8(urlDecode(data));
     }
 
     /**
@@ -203,8 +200,8 @@ public final class B64 {
      * @param data Data to base64 URL decode
      * @return Base64 URL decoded data
      */
-    public static String urlDecodeToString(byte[] data) {
-        return utf8(urlDecode(data));
+    public String urlDecodeToString(byte[] data) {
+        return SolidUtil.Encoding.utf8(urlDecode(data));
     }
 
     /**
@@ -213,8 +210,8 @@ public final class B64 {
      * @param data Data to base64 URL decode
      * @return Base64 URL decoded data
      */
-    public static byte[] urlDecode(String data) {
-        return urlDecode(utf8(data));
+    public byte[] urlDecode(String data) {
+        return urlDecode(SolidUtil.Encoding.utf8(data));
     }
 
     /**
@@ -223,7 +220,7 @@ public final class B64 {
      * @param data Data to base64 URL decode
      * @return Base64 URL decoded data
      */
-    public static byte[] urlDecode(byte[] data) {
-        return Base64.getUrlDecoder().decode(data);
+    public byte[] urlDecode(byte[] data) {
+        return java.util.Base64.getUrlDecoder().decode(data);
     }        
 }

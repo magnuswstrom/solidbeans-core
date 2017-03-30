@@ -1,9 +1,9 @@
-package com.solidbeans.core.security.jwt;
+package com.solidbeans.core.security.jwt.claims;
 
 /**
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtClaims<T> {
+public final class Claims<T> {
 
     private final String iss;
     private final String sub;
@@ -14,7 +14,7 @@ public final class JwtClaims<T> {
     private final String jti;
     private final T own;
 
-    private JwtClaims(String iss, String sub, String aud, Long exp, Long nbf, Long iat, String jti, T own) {
+    private Claims(String iss, String sub, String aud, Long exp, Long nbf, Long iat, String jti, T own) {
         this.iss = iss;
         this.sub = sub;
         this.aud = aud;
@@ -25,8 +25,8 @@ public final class JwtClaims<T> {
         this.own = own;
     }
 
-    public static <T> JwtClaims<T> fromClaims(String iss, String sub, String aud, Long exp, Long nbf, Long iat, String jti, T own) {
-        return new JwtClaims<>(iss, sub, aud, exp, nbf, iat, jti, own);
+    public static <T> Claims<T> fromClaims(String iss, String sub, String aud, Long exp, Long nbf, Long iat, String jti, T own) {
+        return new Claims<>(iss, sub, aud, exp, nbf, iat, jti, own);
     }
 
     public String getIss() {

@@ -5,12 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author magnus.wahlstrom@solidbeans.com
  */
-final class JwtPrincipal {
+final class Principal {
 
     private final String jwt;
     private final HttpServletRequest httpRequest;
 
-    public JwtPrincipal(String jwt, HttpServletRequest httpRequest) {
+    public Principal(String jwt, HttpServletRequest httpRequest) {
         this.jwt = jwt;
         this.httpRequest = httpRequest;
     }

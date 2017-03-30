@@ -1,5 +1,7 @@
 package com.solidbeans.core.security.jwt.spring;
 
+import com.solidbeans.core.security.jwt.Parts;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -15,19 +17,18 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Objects;
-
-import static com.solidbeans.core.security.jwt.JwtUtil.jwt;
 
 /**
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JwtSecurityFilter extends GenericFilterBean {
+public final class SecurityJwtFilter extends GenericFilterBean {
 
     private final AuthenticationManager authenticationManager;
     private final AuthenticationEntryPoint authenticationFailureEntryPoint;
 
-    public JwtSecurityFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationFailureEntryPoint) {
+    public SecurityJwtFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationFailureEntryPoint) {
         this.authenticationManager = authenticationManager;
         this.authenticationFailureEntryPoint = authenticationFailureEntryPoint;
     }
@@ -40,7 +41,7 @@ public final class JwtSecurityFilter extends GenericFilterBean {
             String jwt = jwt(httpRequest);
 
             if (Objects.nonNull(jwt)) {
-                Authentication authRequest = new PreAuthenticatedAuthenticationToken(new JwtPrincipal(jwt, httpRequest), null);
+                Authentication authRequest = new PreAuthenticatedAuthenticationToken(new Principal(jwt, httpRequest), null);
                 Authentication authResult = authenticationManager.authenticate(authRequest);
 
                 SecurityContextHolder.getContext().setAuthentication(authResult);
@@ -52,5 +53,22 @@ public final class JwtSecurityFilter extends GenericFilterBean {
             SecurityContextHolder.clearContext();
             authenticationFailureEntryPoint.commence(httpRequest, (HttpServletResponse)response, e);
         }
+    }
+
+    private String jwt(HttpServletRequest httpServletRequest) {
+        String start = "Bearer ";
+        Enumeration<String> headerValues = httpServletRequest.getHeaders(HttpHeaders.AUTHORIZATION);
+
+        while(headerValues.hasMoreElements()) {
+            String headerValue = headerValues.nextElement();
+
+            if(headerValue != null) {
+                if(Parts.isJwt(headerValue)) {
+                    return headerValue.substring(start.length());
+                }
+            }
+        }
+
+        return null;
     }
 }
