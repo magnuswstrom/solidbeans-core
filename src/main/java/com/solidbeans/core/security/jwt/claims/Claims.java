@@ -1,6 +1,8 @@
 package com.solidbeans.core.security.jwt.claims;
 
 /**
+ * For all standard properties see https://jwt.io/
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class Claims<T> {

@@ -8,6 +8,7 @@ package com.solidbeans.core.security.jwt.spring;
 import org.springframework.security.core.AuthenticationException;
 
 /**
+ * JWT exception
  *
  * @author magnus.wahlstrom@solidbeans.com
  */

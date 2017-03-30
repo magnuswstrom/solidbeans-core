@@ -22,6 +22,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * JWT authentication provider
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class SecurityJwtProvider<T> implements AuthenticationProvider {
@@ -33,15 +35,19 @@ public final class SecurityJwtProvider<T> implements AuthenticationProvider {
     private final JtiCache jtiCache;
     private final Class<Claims<T>> claimsClass;
 
-    public SecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
+    private SecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
+        this.repository = repository;
+        this.config = config;
+        this.jtiCache = JtiCache.createJtiCache(config);
+        this.claimsClass = claimsClass;
+    }
+
+    public static <T> SecurityJwtProvider<T> createSecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
         checkNotNull(repository);
         checkNotNull(config);
         checkNotNull(claimsClass);
 
-        this.repository = repository;
-        this.config = config;
-        this.jtiCache = new JtiCache(config);
-        this.claimsClass = claimsClass;
+        return new SecurityJwtProvider<>(repository, config, claimsClass);
     }
 
     @Override
@@ -54,7 +60,7 @@ public final class SecurityJwtProvider<T> implements AuthenticationProvider {
 
             Principal principal = (Principal)authentication.getPrincipal();
             Parts parts = Parts.fromJwt(principal.getJwt());
-            Claims<T> claims = parts.getJwtClaims(claimsClass);
+            Claims<T> claims = parts.getClaimsAsEntity(claimsClass);
             Algorithm algorithm = parts.getAlgorithm();
 
             authorizeAlgorithm(algorithm);

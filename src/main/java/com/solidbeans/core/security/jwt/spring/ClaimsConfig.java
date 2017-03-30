@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Claims configuration how security filter should handle claims property
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class ClaimsConfig {

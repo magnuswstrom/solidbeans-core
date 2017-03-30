@@ -11,22 +11,26 @@ import com.google.common.cache.CacheBuilder;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * JTI cache to handle multiple request with same JTI
  *
  * @author magnus.wahlstrom@solidbeans.com
  */
-public final class JtiCache {
+final class JtiCache {
 
     private final Cache<String, String> cache;
 
-    public JtiCache(ClaimsConfig config) {
-        checkNotNull(config);
-
+    private JtiCache(ClaimsConfig config) {
         this.cache = CacheBuilder.newBuilder()
                 .maximumSize(config.getCacheMaxSize())
                 .expireAfterAccess(config.getCacheTime(), config.getCacheTimeUnit())
                 .build();
     }
-    
+
+    public static JtiCache createJtiCache(ClaimsConfig config) {
+        checkNotNull(config);
+        return new JtiCache(config);
+    }
+
     public boolean exists(String jti) {
         return cache.getIfPresent(jti) != null;
     }

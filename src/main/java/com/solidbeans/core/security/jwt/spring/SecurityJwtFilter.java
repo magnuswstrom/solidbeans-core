@@ -20,7 +20,15 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Objects;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
+ * Spring security filter
+ *
+ * <code>
+ *     http.addFilterAfter(new JwtSecurityFilter(authenticationManager(), ownFailedEntryPoint()), BasicAuthenticationFilter.class);
+ * </code>
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class SecurityJwtFilter extends GenericFilterBean {
@@ -28,9 +36,16 @@ public final class SecurityJwtFilter extends GenericFilterBean {
     private final AuthenticationManager authenticationManager;
     private final AuthenticationEntryPoint authenticationFailureEntryPoint;
 
-    public SecurityJwtFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationFailureEntryPoint) {
+    private SecurityJwtFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationFailureEntryPoint) {
         this.authenticationManager = authenticationManager;
         this.authenticationFailureEntryPoint = authenticationFailureEntryPoint;
+    }
+
+    public static SecurityJwtFilter createSecurityJwtFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationFailureEntryPoint) {
+        checkNotNull(authenticationManager);
+        checkNotNull(authenticationFailureEntryPoint);
+
+        return new SecurityJwtFilter(authenticationManager, authenticationFailureEntryPoint);
     }
 
     @Override

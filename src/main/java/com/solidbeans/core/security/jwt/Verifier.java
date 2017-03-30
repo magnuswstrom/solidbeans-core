@@ -25,11 +25,25 @@ public final class Verifier {
         this.algorithm = algorithm;
     }
 
+    /**
+     * Creates Verifier instance from algorithm
+     *
+     * @param algorithm Algorithm for this instance
+     * @return Verifier instance
+     */
     public static Verifier fromAlg(Algorithm algorithm) {
         checkNotNull(algorithm);
         return new Verifier(algorithm);
     }
 
+    /**
+     * Verifies JWT using algorithm for this instance. Secret should conform to {@link AlgorithmProvider#verify(byte[], byte[], Object)} depending on chosen algorithm
+     *
+     * @param jwt JWT to verify
+     * @param secret Secret to verify JWT with
+     * @return If JWT is valid or not
+     * @throws GeneralSecurityException If verify fails
+     */
     public boolean verify(String jwt, Object secret) throws GeneralSecurityException {
         Parts parts = Parts.fromJwt(jwt);
         AlgorithmProvider algorithmProvider = AlgorithmFactory.algorithmProvider(algorithm);

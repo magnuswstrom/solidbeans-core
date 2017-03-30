@@ -26,11 +26,26 @@ public final class Signer {
         this.algorithm = algorithm;
     }
 
+    /**
+     * Creates Signer instance from algorithm
+     *
+     * @param algorithm Algorithm for this instance
+     * @return Signer instance
+     */
     public static Signer fromAlg(Algorithm algorithm) {
         checkNotNull(algorithm);
         return new Signer(algorithm);
     }
 
+    /**
+     * Signs claims using algorithm for this instance. Secret should conform to {@link AlgorithmProvider#sign(byte[], Object)} depending on chosen algorithm
+     *
+     * @param claims Claims to sign
+     * @param secret Secret to sign claims with
+     * @param <T> Own claims
+     * @return Signature
+     * @throws GeneralSecurityException If signing claims fails
+     */
     public <T> String sign(Claims<T> claims, Object secret) throws GeneralSecurityException {
         Parts parts = Parts.fromAlg(algorithm, claims);
         AlgorithmProvider algorithmProvider = AlgorithmFactory.algorithmProvider(algorithm);

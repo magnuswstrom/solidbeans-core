@@ -5,6 +5,8 @@ import com.solidbeans.core.security.jwt.algorithm.Algorithm;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
+ * For all standard properties see https://jwt.io/
+ *
  * @author magnus.wahlstrom@solidbeans.com
  */
 public final class Header {
@@ -18,13 +20,22 @@ public final class Header {
     }
 
     public static Header fromAlg(String alg) {
+        return fromAlg("JWT", alg);
+    }
+
+    public static Header fromAlg(String typ, String alg) {
         checkNotNull(alg);
-        return new Header("JWT", alg);
+        checkNotNull(typ);
+        return new Header(typ, alg);
     }
 
     public static Header fromAlg(Algorithm algorithm) {
+        return fromAlg("JWT", algorithm);
+    }
+
+    public static Header fromAlg(String typ, Algorithm algorithm) {
         checkNotNull(algorithm);
-        return fromAlg(algorithm.alg());
+        return fromAlg(typ, algorithm.alg());
     }
 
     public String getTyp() {

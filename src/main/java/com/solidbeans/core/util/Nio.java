@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class Nio {
 
-    private Map<String, Integer> powerMap;
+    private final Map<String, Integer> powerMap;
 
     Nio() {
         powerMap = Maps.newHashMap();
