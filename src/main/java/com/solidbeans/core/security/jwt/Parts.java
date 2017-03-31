@@ -3,6 +3,7 @@ package com.solidbeans.core.security.jwt;
 import com.solidbeans.core.security.jwt.algorithm.Algorithm;
 import com.solidbeans.core.security.jwt.claims.Claims;
 import com.solidbeans.core.security.jwt.claims.Header;
+import com.solidbeans.core.util.Json;
 import com.solidbeans.core.util.SolidUtil;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -134,12 +135,13 @@ public final class Parts {
     /**
      * Get claims as entity
      *
-     * @param claimsClass Claims class
-     * @param <T> Own Claims
+     * @param ownClaimsClass Own claims class
+     * @param <T> Own Claims type
      * @return Claims as entity
      */
-    public <T> Claims<T> getClaimsAsEntity(Class<Claims<T>> claimsClass) {
-        return SolidUtil.Json.fromJson(SolidUtil.Base64.urlDecodeToString(claims), claimsClass);
+    public <T> Claims<T> getClaimsAsEntity(Class<T> ownClaimsClass) throws Exception {
+        //noinspection unchecked
+        return (Claims<T>)SolidUtil.Json.fromJson(SolidUtil.Base64.urlDecodeToString(claims), Claims.class, Json.TypeAdapter.createTypeAdapter(ownClaimsClass, ownClaimsClass.newInstance()));
     }
 
     /**

@@ -11,13 +11,37 @@ import java.util.concurrent.TimeUnit;
  */
 public final class ClaimsConfig {
 
+    public static ClaimsConfig createDefaultClaimsConfig() {
+        return createTolerantClaimsConfig();
+    }
+
+    public static ClaimsConfig createTolerantClaimsConfig() {
+        return new ClaimsConfig();
+    }
+
+    public static ClaimsConfig createStrictClaimsConfig() {
+       ClaimsConfig claimsConfig = createTolerantClaimsConfig();
+
+        claimsConfig.setIssNotNull(true);
+        claimsConfig.setIssRequiredValid(true);
+        claimsConfig.setSubNotNull(true);
+        claimsConfig.setAudNotNull(true);
+        claimsConfig.setIatNotNull(true);
+        claimsConfig.setExpNotNull(true);
+        claimsConfig.setNbfNotNull(true);
+        claimsConfig.setJtiNotNull(true);
+        claimsConfig.setJtiType(JtiType.UUID);
+
+       return claimsConfig;
+    }
+
     public enum JtiType {
         NONE, IP, UUID
     }
 
     private JtiType jtiType;
     private long cacheMaxSize;
-    private int cacheTime;
+    private long cacheTime;
     private TimeUnit cacheTimeUnit;
 
     private boolean isIssNotNull;
@@ -30,7 +54,7 @@ public final class ClaimsConfig {
     private boolean isJtiNotNull;
     private final List<String> validIssuers;
 
-    public ClaimsConfig() {
+    private ClaimsConfig() {
         this.isIssNotNull = false;
         this.isIssRequiredValid = false;
         this.isSubNotNull = false;
@@ -42,7 +66,7 @@ public final class ClaimsConfig {
         this.validIssuers = new ArrayList<>();
         this.jtiType = JtiType.NONE;
         this.cacheMaxSize = 1000000L;
-        this.cacheTime = 1;
+        this.cacheTime = 1L;
         this.cacheTimeUnit = TimeUnit.HOURS;
     }
 
@@ -130,11 +154,11 @@ public final class ClaimsConfig {
         this.cacheMaxSize = cacheMaxSize;
     }
 
-    public int getCacheTime() {
+    public long getCacheTime() {
         return cacheTime;
     }
 
-    public void setCacheTime(int cacheTime) {
+    public void setCacheTime(long cacheTime) {
         this.cacheTime = cacheTime;
     }
 

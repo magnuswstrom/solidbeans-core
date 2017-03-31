@@ -33,21 +33,21 @@ public final class SecurityJwtProvider<T> implements AuthenticationProvider {
     private final SecurityJwtRepository<T> repository;
     private final ClaimsConfig config;
     private final JtiCache jtiCache;
-    private final Class<Claims<T>> claimsClass;
+    private final Class<T> ownClaimsClass;
 
-    private SecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
+    private SecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<T> ownClaimsClass) {
         this.repository = repository;
         this.config = config;
         this.jtiCache = JtiCache.createJtiCache(config);
-        this.claimsClass = claimsClass;
+        this.ownClaimsClass = ownClaimsClass;
     }
 
-    public static <T> SecurityJwtProvider<T> createSecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<Claims<T>> claimsClass) {
+    public static <T> SecurityJwtProvider<T> createSecurityJwtProvider(SecurityJwtRepository<T> repository, ClaimsConfig config, Class<T> ownClaimsClass) {
         checkNotNull(repository);
         checkNotNull(config);
-        checkNotNull(claimsClass);
+        checkNotNull(ownClaimsClass);
 
-        return new SecurityJwtProvider<>(repository, config, claimsClass);
+        return new SecurityJwtProvider<>(repository, config, ownClaimsClass);
     }
 
     @Override
@@ -60,7 +60,7 @@ public final class SecurityJwtProvider<T> implements AuthenticationProvider {
 
             Principal principal = (Principal)authentication.getPrincipal();
             Parts parts = Parts.fromJwt(principal.getJwt());
-            Claims<T> claims = parts.getClaimsAsEntity(claimsClass);
+            Claims<T> claims = parts.getClaimsAsEntity(ownClaimsClass);
             Algorithm algorithm = parts.getAlgorithm();
 
             authorizeAlgorithm(algorithm);
